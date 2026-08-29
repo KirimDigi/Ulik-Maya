@@ -731,7 +731,7 @@ function _pauseAudio(){
 				</div>
 				<div class="elementor-element elementor-element-5246d1ed keluar elementor-widget elementor-widget-heading" data-id="5246d1ed" data-element_type="widget" data-e-type="widget" data-aos="fade-up" data-aos-delay="300" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
-					<h2 class="elementor-heading-title elementor-size-default">Pukul: Selesai</h2>				</div>
+					<h2 class="elementor-heading-title elementor-size-default">Pukul: 08.00 WIB</h2>				</div>
 				</div>
 				<div class="elementor-element elementor-element-393d2075 elementor-widget-divider--view-line_icon keluarin elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider" data-id="393d2075" data-element_type="widget" data-e-type="widget" data-widget_type="divider.default">
 				<div class="elementor-widget-container">
@@ -783,7 +783,7 @@ function _pauseAudio(){
 				</div>
 				<div class="elementor-element elementor-element-4694adcf keluar elementor-widget elementor-widget-heading" data-id="4694adcf" data-element_type="widget" data-e-type="widget" data-aos="fade-up" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
-					<h2 class="elementor-heading-title elementor-size-default">Temu Manten</h2>				</div>
+					<h2 class="elementor-heading-title elementor-size-default">Resepsi</h2>				</div>
 				</div>
 				<div class="elementor-element elementor-element-56a53171 keluar elementor-widget elementor-widget-heading" data-id="56a53171" data-element_type="widget" data-e-type="widget" data-aos="fade-up" data-aos-delay="300" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
@@ -791,7 +791,7 @@ function _pauseAudio(){
 				</div>
 				<div class="elementor-element elementor-element-79dd32e2 keluar elementor-widget elementor-widget-heading" data-id="79dd32e2" data-element_type="widget" data-e-type="widget" data-aos="fade-up" data-aos-delay="300" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
-					<h2 class="elementor-heading-title elementor-size-default">Pukul: 14.00 WIB - Selesai</h2>				</div>
+					<h2 class="elementor-heading-title elementor-size-default">Pukul: 16.00 - Selesai</h2>				</div>
 				</div>
 				<div class="elementor-element elementor-element-75fa8add elementor-widget-divider--view-line_icon keluarin elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider" data-id="75fa8add" data-element_type="widget" data-e-type="widget" data-widget_type="divider.default">
 				<div class="elementor-widget-container">
@@ -805,7 +805,7 @@ function _pauseAudio(){
 				</div>
 				<div class="elementor-element elementor-element-5b855683 keluar elementor-widget elementor-widget-heading" data-id="5b855683" data-element_type="widget" data-e-type="widget" data-aos="fade-up" data-aos-delay="300" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
-					<h2 class="elementor-heading-title elementor-size-default">Lokasi Temu Manten</h2>				</div>
+					<h2 class="elementor-heading-title elementor-size-default">Lokasi Resepsi</h2>				</div>
 				</div>
 				<div class="elementor-element elementor-element-313b98a7 keluar elementor-widget elementor-widget-heading" data-id="313b98a7" data-element_type="widget" data-e-type="widget" data-aos="fade-up" data-aos-delay="300" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
@@ -894,7 +894,7 @@ function _pauseAudio(){
 				</div>
 				<div class="elementor-element elementor-element-447d6ea9 keluar elementor-widget elementor-widget-heading" data-id="447d6ea9" data-element_type="widget" data-e-type="widget" data-aos="fade-up" data-aos-delay="300" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
-					<h2 class="elementor-heading-title elementor-size-default">Kehadiran Anda adalah hadiah itu sendiri. Tetapi jika Anda ingin memberi kami sesuatu yang lain, silakan ketuk tombol di bawah ini untuk informasi lebih lanjut</h2>				</div>
+					<h2 class="elementor-heading-title elementor-size-default">Kehadiran Anda adalah hadiah itu sendiri. Tetapi jika Anda ingin memberi kami sesuatu yang lain, Anda dapat mengirimkannya melalui informasi di bawah ini:</h2>				</div>
 				</div>
 				<div class="elementor-element elementor-element-221b93ea elementor-align-center keluar elementor-widget elementor-widget-button" data-id="221b93ea" data-element_type="widget" data-e-type="widget" id="btnAmplop" data-aos="fade-up" data-aos-delay="500" data-widget_type="button.default">
 				<div class="elementor-widget-container">
@@ -1124,29 +1124,10 @@ function _pauseAudio(){
         var btnHide = document.getElementById("btn-hide");
         var amplop = document.getElementById("amplop");
 
-        // Sembunyikan btn-hide dan amplop saat halaman dimuat
-        btnHide.style.display = "none";
-        amplop.style.display = "none";
-
-        // Fungsi untuk menampilkan btn-hide dan amplop saat btnAmplop diklik
-        btnAmplop.onclick = function () {
-            // Menampilkan btn-hide
-            btnHide.style.display = "block";
-            // Menyembunyikan btnAmplop
-            btnAmplop.style.display = "none";
-            // Menampilkan section amplop
-            amplop.style.display = "block";
-        };
-
-        // Fungsi untuk menampilkan btnAmplop kembali dan menyembunyikan btn-hide saat btn-hide diklik
-        btnHide.onclick = function () {
-            // Menyembunyikan btn-hide
-            btnHide.style.display = "none";
-            // Menampilkan btnAmplop kembali
-            btnAmplop.style.display = "block";
-            // Menyembunyikan section amplop
-            amplop.style.display = "none";
-        };
+        // Selalu tampilkan amplop, sembunyikan tombol
+        if (btnHide) btnHide.style.display = "none";
+        if (btnAmplop) btnAmplop.style.display = "none";
+        if (amplop) amplop.style.display = "block";
     });
 </script>
 				</div>
