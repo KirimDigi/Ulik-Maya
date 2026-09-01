@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="id" prefix="og: https://ogp.me/ns#">
 <head>
 	<meta charset="UTF-8">
@@ -257,7 +257,7 @@ fbq('init', '1380840439802436', {}, {
 
 <!-- Meta Pixel Code -->
 <noscript>
-<img height="1" width="1" style="display:none" alt="fbpx" src="./tr-1?id=1380840439802436&ev=PageView&noscript=1">
+<img height="1" width="1" style="display:none" alt="fbpx" src="tr-1?id=1380840439802436&ev=PageView&noscript=1">
 </noscript>
 <!-- End Meta Pixel Code -->
 
@@ -373,6 +373,51 @@ const discMusics = document.querySelectorAll(".elementor-icon-wrapper[id*=mute-s
 const topSectionEl = document.querySelectorAll(".elementor-top-section");
 hideAllSect();
 disableScroll();
+// --- Autoplay music langsung saat buka URL (tanpa klik) - 2026-08-28 WhatsApp Audio ---
+function tryAutoPlayOnLoad(){
+    var songEl = document.getElementById("song");
+    // gabungkan selector disc lama + wds_audio biar animasi berputar tetap jalan
+    var allDiscs = document.querySelectorAll(".elementor-icon-wrapper[id*=mute-sound] .elementor-icon i, #wds_audio_play .elementor-icon, #wds_audio_pause .elementor-icon");
+    if(songEl){
+        songEl.muted = false;
+        songEl.volume = 1.0;
+        songEl.preload = "auto";
+        songEl.setAttribute("playsinline","");
+        var playPromise = songEl.play();
+        if(playPromise && playPromise.then){
+            playPromise.then(function(){
+                ytMusicPlaying = true;
+                allDiscs.forEach(function(d){ d.classList.add('audioRotate'); });
+                discMusics.forEach(function(d){ d.classList.add('audioRotate'); });
+            }).catch(function(err){
+                console.log("Autoplay blocked, menunggu interaksi user:", err);
+            });
+        } else {
+            ytMusicPlaying = true;
+            allDiscs.forEach(function(d){ d.classList.add('audioRotate'); });
+            discMusics.forEach(function(d){ d.classList.add('audioRotate'); });
+        }
+    } else {
+        isYT = true;
+        if(window.jQuery){
+            jQuery("iframe").each(function(){
+                if(this.id==='youtube-player') jQuery(this)[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*')
+            });
+        }
+        ytMusicPlaying = true;
+        allDiscs.forEach(function(d){ d.classList.add('audioRotate'); });
+        discMusics.forEach(function(d){ d.classList.add('audioRotate'); });
+    }
+}
+document.addEventListener("DOMContentLoaded", function(){ setTimeout(tryAutoPlayOnLoad, 200); });
+window.addEventListener("load", function(){ setTimeout(tryAutoPlayOnLoad, 800); });
+// fallback: interaksi pertama di mana saja (atasi browser block autoplay bersuara)
+["click","touchstart","keydown","scroll","mousemove"].forEach(function(ev){
+    document.addEventListener(ev, function handler(){
+        if(!ytMusicPlaying) tryAutoPlayOnLoad();
+        document.removeEventListener(ev, handler);
+    }, {once:true, passive:true});
+});
 function hideAllSect(){
     if ( document.body.classList.contains('elementor-editor-active') ) return;
     for (const elSect of topSectionEl) {
@@ -927,7 +972,7 @@ function _pauseAudio(){
 		<div class="has_eae_slider elementor-element elementor-element-4a8c2d23 e-con-full jedv-enabled--yes e-flex e-con e-child" data-eae-slider="89383" data-id="4a8c2d23" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;,&quot;jet_parallax_layout_list&quot;:[]}">
 				<div class="elementor-element elementor-element-6bcada93 elementor-widget elementor-widget-heading" data-id="6bcada93" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
-					<h2 class="elementor-heading-title elementor-size-default">Maya Hilya Puspita</h2>				</div>
+					<h2 class="elementor-heading-title elementor-size-default"><span style="text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px;">KIRIM KADO</span><br><br><br>Maya Hilya Puspita</h2>				</div>
 				</div>
 				<div class="elementor-element elementor-element-70a6f54d elementor-widget elementor-widget-heading" data-id="70a6f54d" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
 				<div class="elementor-widget-container">
@@ -1534,7 +1579,7 @@ function _pauseAudio(){
 				<div class="elementor-element elementor-element-3aeaa9ca elementor-view-stacked elementor-shape-circle elementor-widget elementor-widget-wds_audio" data-id="3aeaa9ca" data-element_type="widget" data-e-type="widget" data-settings="{&quot;sticky&quot;:&quot;bottom&quot;,&quot;sticky_offset&quot;:50,&quot;sticky_offset_mobile&quot;:70,&quot;sticky_on&quot;:[&quot;desktop&quot;,&quot;tablet&quot;,&quot;mobile&quot;],&quot;sticky_effects_offset&quot;:0,&quot;sticky_anchor_link_offset&quot;:0}" data-widget_type="wds_audio.default">
 				<div class="elementor-widget-container">
 					<script type="text/javascript">
-var WdsAudio = {"source":"url","audio_link":"WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3","audio_start":"1","audio_end":"","autoplay":false}
+var WdsAudio = {"source":"url","audio_link":"WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3","audio_start":"1","audio_end":"","autoplay":true}
 </script>
 
 
@@ -1553,8 +1598,9 @@ var WdsAudio = {"source":"url","audio_link":"WhatsApp%20Audio%202026-08-28%20at%
 
 				
 										
-					<audio id="song" loop="">
+					<audio id="song" loop autoplay preload="auto" playsinline>
 						<source src="WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3" type="audio/mp3">
+						<source src="WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3" type="audio/mpeg">
 					</audio>
 					<script>
 					  (function() {
@@ -1981,8 +2027,8 @@ var tpaeUpdatePopup = {"ajax_url":"https://mehnikah.com/wp-admin/admin-ajax.php"
 <script id="wdp-swiper-js-js" src="wp-content/plugins/weddingpress/assets/js/wdp-swiper.min-1.js"></script>
 <script id="weddingpress-qr-js" src="wp-content/plugins/weddingpress/assets/js/qr-code-1.js"></script>
 <script id="exad-main-script-js" src="wp-content/plugins/weddingpress/assets/js/exad-scripts.min-1.js?ver=3.2.1.1"></script>
-<script id="qr-code-styling-js" src="./qr-code-styling%401.5.0/lib/qr-code-styling-1.js"></script>
-<script id="kirimkit-js" src="./ajax/libs/xlsx/0.17.0/xlsx.full.min-1.js"></script>
+<script id="qr-code-styling-js" src="qr-code-styling%401.5.0/lib/qr-code-styling-1.js"></script>
+<script id="kirimkit-js" src="ajax/libs/xlsx/0.17.0/xlsx.full.min-1.js"></script>
 <script id="cui_js_script-js-extra">
 var CUI_WP = {"ajaxurl":"https://mehnikah.com/wp-admin/admin-ajax.php","cuiNonce":"f64aee7b38","jpages":"true","jPagesNum":"10","textCounter":"true","textCounterNum":"500","widthWrap":"","autoLoad":"true","thanksComment":"Thanks for your comment!","thanksReplyComment":"Thanks for answering the comment!","duplicateComment":"You might have left one of the fields blank, or duplicate comments","accept":"Accept","cancel":"Cancel","reply":"Reply","textWriteComment":"Ucapan","classPopularComment":"cui-popular-comment","textToDisplay":"Text to display","textCharacteresMin":"2 characters minimum","textNavNext":"Next","textNavPrev":"Previous","textMsgDeleteComment":"Do you want delete this comment?","textLoadMore":"Load more"};
 //# sourceURL=cui_js_script-js-extra
@@ -2071,7 +2117,7 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
 //# sourceURL=https://mehnikah.com/wp-includes/js/wp-emoji-loader.min.js
 </script>
 
-<script defer="" src="./beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447-1" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"d5f0ad9deee04e99a2749f7f16355110","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script defer="" src="beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447-1" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"d5f0ad9deee04e99a2749f7f16355110","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 	<script>
 	  (function() {
 	    var observer = new MutationObserver(function(mutations) {
