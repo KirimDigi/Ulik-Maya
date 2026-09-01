@@ -373,12 +373,15 @@ const discMusics = document.querySelectorAll(".elementor-icon-wrapper[id*=mute-s
 const topSectionEl = document.querySelectorAll(".elementor-top-section");
 hideAllSect();
 disableScroll();
-// --- Autoplay music langsung saat buka URL (tanpa klik) - 2026-08-28 WhatsApp Audio ---
+// --- Autoplay music langsung saat buka URL (tanpa klik) - single instance 2026-08-28 WhatsApp Audio ---
+let _autoplayLock = false;
 function tryAutoPlayOnLoad(){
+    if(ytMusicPlaying || _autoplayLock) return;
     var songEl = document.getElementById("song");
-    // gabungkan selector disc lama + wds_audio biar animasi berputar tetap jalan
     var allDiscs = document.querySelectorAll(".elementor-icon-wrapper[id*=mute-sound] .elementor-icon i, #wds_audio_play .elementor-icon, #wds_audio_pause .elementor-icon");
     if(songEl){
+        _autoplayLock = true;
+        ytMusicPlaying = true; // optimistic lock cegah double-play
         songEl.muted = false;
         songEl.volume = 1.0;
         songEl.preload = "auto";
@@ -386,37 +389,42 @@ function tryAutoPlayOnLoad(){
         var playPromise = songEl.play();
         if(playPromise && playPromise.then){
             playPromise.then(function(){
-                ytMusicPlaying = true;
                 allDiscs.forEach(function(d){ d.classList.add('audioRotate'); });
                 discMusics.forEach(function(d){ d.classList.add('audioRotate'); });
+                _autoplayLock = false;
             }).catch(function(err){
                 console.log("Autoplay blocked, menunggu interaksi user:", err);
+                ytMusicPlaying = false;
+                _autoplayLock = false;
             });
         } else {
-            ytMusicPlaying = true;
             allDiscs.forEach(function(d){ d.classList.add('audioRotate'); });
             discMusics.forEach(function(d){ d.classList.add('audioRotate'); });
+            _autoplayLock = false;
         }
     } else {
         isYT = true;
+        ytMusicPlaying = true;
         if(window.jQuery){
             jQuery("iframe").each(function(){
                 if(this.id==='youtube-player') jQuery(this)[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*')
             });
         }
-        ytMusicPlaying = true;
         allDiscs.forEach(function(d){ d.classList.add('audioRotate'); });
         discMusics.forEach(function(d){ d.classList.add('audioRotate'); });
     }
 }
-document.addEventListener("DOMContentLoaded", function(){ setTimeout(tryAutoPlayOnLoad, 200); });
-window.addEventListener("load", function(){ setTimeout(tryAutoPlayOnLoad, 800); });
-// fallback: interaksi pertama di mana saja (atasi browser block autoplay bersuara)
-["click","touchstart","keydown","scroll","mousemove"].forEach(function(ev){
+document.addEventListener("DOMContentLoaded", function(){ setTimeout(tryAutoPlayOnLoad, 300); });
+window.addEventListener("load", function(){ setTimeout(tryAutoPlayOnLoad, 900); });
+// fallback: interaksi pertama di mana saja (atasi browser block autoplay bersuara) - persistent hingga sukses
+["click","touchstart","keydown","scroll","mousemove","touchend"].forEach(function(ev){
     document.addEventListener(ev, function handler(){
-        if(!ytMusicPlaying) tryAutoPlayOnLoad();
-        document.removeEventListener(ev, handler);
-    }, {once:true, passive:true});
+        if(!ytMusicPlaying && !_autoplayLock) tryAutoPlayOnLoad();
+        if(ytMusicPlaying){
+            // sukses, lepas semua listener fallback
+            ["click","touchstart","keydown","scroll","mousemove","touchend"].forEach(function(e){ document.removeEventListener(e, handler); });
+        }
+    }, {passive:true});
 });
 function hideAllSect(){
     if ( document.body.classList.contains('elementor-editor-active') ) return;
@@ -1579,7 +1587,7 @@ function _pauseAudio(){
 				<div class="elementor-element elementor-element-3aeaa9ca elementor-view-stacked elementor-shape-circle elementor-widget elementor-widget-wds_audio" data-id="3aeaa9ca" data-element_type="widget" data-e-type="widget" data-settings="{&quot;sticky&quot;:&quot;bottom&quot;,&quot;sticky_offset&quot;:50,&quot;sticky_offset_mobile&quot;:70,&quot;sticky_on&quot;:[&quot;desktop&quot;,&quot;tablet&quot;,&quot;mobile&quot;],&quot;sticky_effects_offset&quot;:0,&quot;sticky_anchor_link_offset&quot;:0}" data-widget_type="wds_audio.default">
 				<div class="elementor-widget-container">
 					<script type="text/javascript">
-var WdsAudio = {"source":"url","audio_link":"WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3","audio_start":"1","audio_end":"","autoplay":true}
+var WdsAudio = {"source":"url","audio_link":"WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3","audio_start":"1","audio_end":"","autoplay":false}
 </script>
 
 
@@ -1598,8 +1606,7 @@ var WdsAudio = {"source":"url","audio_link":"WhatsApp%20Audio%202026-08-28%20at%
 
 				
 										
-					<audio id="song" loop autoplay preload="auto" playsinline>
-						<source src="WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3" type="audio/mp3">
+					<audio id="song" loop preload="auto" playsinline>
 						<source src="WhatsApp%20Audio%202026-08-28%20at%2020.58.44.mpeg.mp3" type="audio/mpeg">
 					</audio>
 					<script>
